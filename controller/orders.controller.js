@@ -18,18 +18,48 @@ exports.getOrderById = async (req,res) =>{
         let productList = []
 
         try{
-            products.forEach(product =>{
+            for (const obj of products){
+                
+            console.log(data)
+
+                let id = obj.product_id._cdata
+                let image
+                try{
+                    image = await axios.get(urlImg+id+"?"+key)
+                    image = JSON.parse(convert.xml2json(image.data, {compact: true, ignoreComment: true, spaces: 4}))
+                    image = image.prestashop.image.declination[0]._attributes["xlink:href"]
+                }
+                catch{
+                    image = "No picture found."
+                }
 
                 productList.push({
-                    "name":product.product_name._cdata,
-                    "price":product.product_price._cdata,
+                    "id":id,
+                    "name":obj.product_name._cdata,
+                    "price":obj.product_price._cdata,
+                    "image":image
                 })
-            })
+            }
         }
         catch{
+            let id = products.product_id._cdata
+
+            let image
+
+            try{
+                image = await axios.get(urlImg+id+"?"+key)
+                image = JSON.parse(convert.xml2json(image.data, {compact: true, ignoreComment: true, spaces: 4}))
+                image = image.prestashop.image.declination[0]._attributes["xlink:href"]
+            }
+            catch{
+                image = "No picture found."
+            }
+
             productList = {
+                "id":id,
                 "name":products.product_name._cdata,
                 "price":products.product_price._cdata,
+                "image":image
             }
         }
 
