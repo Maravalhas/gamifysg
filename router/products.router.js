@@ -8,6 +8,9 @@ router.route('/')
 router.route('/:id')
     .get(controller.getProductById)
 
+router.route('/category/:id')
+    .get(controller.getProductsByCategory)
+
 router.route('/categories')
     .get(controller.getCategories)
 
