@@ -203,10 +203,9 @@ exports.getProductsByName = async (req,res) =>{
 
 }
 
-exports.getCategories = async (req,res) =>{
+exports.getAllCategories = async (req,res) =>{
     try {
-        
-        let data = await axios.get("https://design.sofiagodinho.com/api/categories"+"?"+key)
+        let data = await axios.get("https://design.sofiagodinho.com/api/categories?"+key)
         data = JSON.parse(convert.xml2json(data.data, {compact: true, ignoreComment: true, spaces: 4}))
         data = data.prestashop.categories.category
 

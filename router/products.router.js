@@ -2,17 +2,17 @@ const express = require('express')
 const router = express.Router()
 const controller = require('../controller/products.controller.js')
 
-router.route('/')
+router.route('/list')
     .get(controller.getProducts)
 
 router.route('/:id')
     .get(controller.getProductById)
+    
+router.route('/')
+    .get(controller.getAllCategories)
 
 router.route('/category/:id')
     .get(controller.getProductsByCategory)
-
-router.route('/categories')
-    .get(controller.getCategories)
 
 router.route('/text/:text')
     .get(controller.getProductsByName)
