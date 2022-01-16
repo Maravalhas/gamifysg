@@ -5,6 +5,9 @@ const controller = require('../controller/customers.controller.js')
 router.route('/')
     .post(controller.register)
 
+router.route('/signin')
+    .post(controller.login)
+
 router.route('/:id')
     .get(controller.getCustomerById)
 
