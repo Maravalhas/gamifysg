@@ -65,18 +65,66 @@ exports.getProductById = async (req,res) =>{
 
 exports.getProductsByCategory = async (req,res) =>{
     try {
-        let data = await axios.get(url+`/?filter[id_category_default]=${req.params.id}&`+key)
+
+        let limit = req.body.limit ? req.body.limit : 10
+        let offset = req.body.offset ? req.body.offset : 0
+        let data = await axios.get(url+`/?filter[id_category_default]=${req.params.id}&limit=${offset},${limit}&`+key)
         data = JSON.parse(convert.xml2json(data.data, {compact: true, ignoreComment: true, spaces: 4}))
+        data = data.prestashop.products.product
 
-        let productLinks = []
+        let produtos = []
 
-        console.log(data.prestashop.products.product)
+        try{
+            for(const obj of data){
+                let objUrl = obj._attributes["xlink:href"]
+                let prod = await axios.get(objUrl+"?"+key)
+                prod = JSON.parse(convert.xml2json(prod.data, {compact: true, ignoreComment: true, spaces: 4}))
+                prod = prod.prestashop.product
 
-        data.prestashop.products.product.forEach(obj=>{
-            productLinks.push(apiUrl + obj._attributes.id)
-        })
+                let inStock = false
+                let stocks = prod.associations.stock_availables.stock_available
+            
+                try{
+                    for(const obj of stocks){
+                        let link = obj._attributes["xlink:href"]
+                        let req = await axios.get(link+"?"+key)
+                        req = JSON.parse(convert.xml2json(req.data, {compact: true, ignoreComment: true, spaces: 4}))
+                        if(req.prestashop.stock_available.quantity._cdata != 0)
+                        inStock=true
+                        break
+                    }
+                }
+                catch{
+                    inStock = false
+                }
 
-        res.status(200).json(productLinks);
+                let image
+
+                try{
+                    image = prod.associations.images.image[0]._attributes["xlink:href"]
+                }
+                catch{
+                    try{
+                        image = prod.associations.images.image._attributes["xlink:href"]
+                    }
+                    catch{
+                        image = ""
+                    }
+                }
+
+                produtos.push({
+                    "id":prod.id._cdata,
+                    "name":prod.name.language[1]._cdata,
+                    "price":prod.price._cdata,
+                    "image":image,
+                    "inStock":inStock
+                })
+            }
+        }
+        catch(err){
+            produtos="Nenhum resultado encontrado"
+        }
+        res.status(200).json(produtos)
     }
     catch (err) {
         res.status(500).json({
@@ -157,7 +205,8 @@ exports.getProductsByName = async (req,res) =>{
 
 exports.getCategories = async (req,res) =>{
     try {
-        let data = await axios.get("https://design.sofiagodinho.com/api/categories?"+key)
+        
+        let data = await axios.get("https://design.sofiagodinho.com/api/categories"+"?"+key)
         data = JSON.parse(convert.xml2json(data.data, {compact: true, ignoreComment: true, spaces: 4}))
         data = data.prestashop.categories.category
 
