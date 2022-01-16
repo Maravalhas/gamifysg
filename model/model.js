@@ -14,6 +14,8 @@ Score.init({
     points: {type: DataTypes.FLOAT, allowNull: false}
 }, { sequelize, modelName: 'Score'})
 
+// MODEL Rewards
+
 class Prizes extends Model {}
 
 Prizes.init({
@@ -28,6 +30,8 @@ UserPrizes.init({
     id_prize: {type: DataTypes.INTEGER, allowNull: false},
     id_user: {type: DataTypes.INTEGER, allowNull: false},
 }, { sequelize, modelName: 'UserPrize'})
+
+// MODEL Medals
 
 class Medals extends Model {}
 
@@ -45,12 +49,27 @@ UserMedals.init({
 }, { sequelize, modelName: 'UserMedal'})
 
 
+// MODEL Users
+
+class Customers extends Model{}
+
+Customers.init({
+    id_nif : {type: DataTypes.INTEGER, primaryKey: true, allowNull: false, unique:true},
+    firstname : {type: DataTypes.STRING, allowNull: false},
+    lastname : {type: DataTypes.STRING, allowNull: false},
+    email : {type: DataTypes.STRING, allowNull: false, unique:true},
+    password : {type: DataTypes.STRING, allowNull: false},
+    gender : {type: DataTypes.STRING, allowNull: false}, 
+    birthday : {type: DataTypes.DATE, allowNull: false}
+}, { sequelize, modelName: 'Customer'})
+
 sequelize.sync().then().catch(error => {
     console.log(error); 
 })
 
-exports.Score = Score;
-exports.Prizes = Prizes;
-exports.UserPrizes = UserPrizes;
-exports.Medals = Medals;
-exports.UserMedals = UserMedals;
+exports.Score = Score
+exports.Prizes = Prizes
+exports.UserPrizes = UserPrizes
+exports.Medals = Medals
+exports.UserMedals = UserMedals
+exports.Customers = Customers

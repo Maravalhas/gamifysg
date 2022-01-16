@@ -1,7 +1,7 @@
 const url = "https://design.sofiagodinho.com/api/products"
 const apiUrl = "http://localhost:3000/products/"
-var key = require('../config/db.config').key
-var convert = require('xml-js')
+const key = require('../config/db.config').key
+const convert = require('xml-js')
 const axios = require('axios')
 
 exports.getProducts = async (req,res) =>{
@@ -54,7 +54,6 @@ exports.getProductById = async (req,res) =>{
             "stock":finalStock,  
             "imageLink":images
         }
-
         res.status(200).json(product);
     }
     catch (err) {
