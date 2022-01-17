@@ -1,9 +1,9 @@
 const Model = require('../model/model')
 const Score = Model.Score;
 
-exports.getUserScore= async (req,res) =>{
+exports.getCustomerScore= async (req,res) =>{
     try {
-        let data = await Score.findOne({where:{id_user:req.params.id}})
+        let data = await Score.findOne({where:{id_nif:req.params.nif}})
         if(!data)
         {
             res.status(404).json({
@@ -21,18 +21,18 @@ exports.getUserScore= async (req,res) =>{
     }
 }
 
-exports.updateUserScore = async (req,res) =>{
+exports.updateCustomerScore = async (req,res) =>{
     try {
-        let data = await Score.findOne({where:{id_user:req.params.id}})
+        let data = await Score.findOne({where:{id_nif:req.params.nif}})
         if(!data)
         {
             res.status(404).json({
-                message: "User does not exist."
+                message: "Customer does not exist."
             });
         }
         else{
-            Score.update({points: data.points + req.body.points},{where:{id_user:req.params.id}})
-            .then(res.status(201).json({ message: "User score updated", location: "/score/" + req.params.id }))
+            Score.update({points: data.points + req.body.points},{where:{id_nif:req.params.nif}})
+            .then(res.status(201).json({ message: "Customer score updated", location: "/score/" + req.params.id }))
         }
     }
     catch (err) {

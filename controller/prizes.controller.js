@@ -1,6 +1,6 @@
 const Model = require('../model/model')
 const Prizes = Model.Prizes;
-const UserPrizes = Model.Prizes;
+const CustomerPrizes = Model.CustomerPrizes;
 const Score = Model.Score;
 
 exports.getPrize = async (req,res) =>{
@@ -34,22 +34,22 @@ exports.buyPrize = async (req,res) =>{
         }
         else{
 
-            let userScore = await Score.findOne({where:{id_user:req.params.userid}})
-            if (!userScore){
+            let customerScore = await Score.findOne({where:{id_nif:req.params.nif}})
+            if (!customerScore){
                 res.status(404).json({
-                    message: "This user does not exist."
+                    message: "This customer does not exist."
                 });
             }
             else{
                 
-                if(userScore <= prize.points){
+                if(customerScore <= prize.points){
                     res.status(401).json({
-                        message: "This user does not have enough points."
+                        message: "This customer does not have enough points."
                     });
                 }
                 else{
-                    UserPrizes.create({
-                        id_user: req.params.userid,
+                    CustomerPrizes.create({
+                        id_nif: req.params.nif,
                         id_prize: req.params.id
                     })
                     res.status(200).json({message:"Prize bought successfully."});

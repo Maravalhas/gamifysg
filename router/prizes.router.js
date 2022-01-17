@@ -7,7 +7,7 @@ const tools = require('../tool/validationtool')
 router.route('/:id')
     .get(controller.getPrize)
 
-router.route('/:id/:userid')
+router.route('/:id/:nif')
     .post(controller.buyPrize)
 
 router.all('*', function (req, res) {

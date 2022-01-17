@@ -10,7 +10,7 @@ const sequelize = new Sequelize.Sequelize(config.DB, config.USER, config.PASSWOR
 class Score extends Model {}
 
 Score.init({
-    id_user: {type: DataTypes.INTEGER, primaryKey: true, allowNull: false, unique:true},
+    id_nif: {type: DataTypes.INTEGER, primaryKey: true, allowNull: false, unique:true},
     points: {type: DataTypes.FLOAT, allowNull: false}
 }, { sequelize, modelName: 'Score'})
 
@@ -24,12 +24,12 @@ Prizes.init({
     points: {type:DataTypes.FLOAT, allowNull: false}
 }, { sequelize, modelName: 'Prize'})
 
-class UserPrizes extends Model {}
+class CustomerPrizes extends Model {}
 
-UserPrizes.init({
+CustomerPrizes.init({
     id_prize: {type: DataTypes.INTEGER, allowNull: false},
-    id_user: {type: DataTypes.INTEGER, allowNull: false},
-}, { sequelize, modelName: 'UserPrize'})
+    id_nif: {type: DataTypes.INTEGER, allowNull: false},
+}, { sequelize, modelName: 'CustomerPrize'})
 
 // MODEL Medals
 
@@ -41,12 +41,12 @@ Medals.init({
     points: {type:DataTypes.FLOAT, allowNull: false}
 }, { sequelize, modelName: 'Medal'})
 
-class UserMedals extends Model {}
+class CustomerMedals extends Model {}
 
-UserMedals.init({
+CustomerMedals.init({
     id_medal: {type: DataTypes.INTEGER, allowNull: false},
-    id_user: {type: DataTypes.INTEGER, allowNull: false},
-}, { sequelize, modelName: 'UserMedal'})
+    id_nif: {type: DataTypes.INTEGER, allowNull: false},
+}, { sequelize, modelName: 'CustomerMedal'})
 
 
 // MODEL Users
@@ -69,7 +69,7 @@ sequelize.sync().then().catch(error => {
 
 exports.Score = Score
 exports.Prizes = Prizes
-exports.UserPrizes = UserPrizes
+exports.CustomerPrizes = CustomerPrizes
 exports.Medals = Medals
-exports.UserMedals = UserMedals
+exports.CustomerMedals = CustomerMedals
 exports.Customers = Customers
