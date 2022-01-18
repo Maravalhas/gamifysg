@@ -1,18 +1,21 @@
-let Model = require('../model/model.js')
+const Model = require('../model/model.js')
+const Customers = Model.Customers
+const Score = Model.Score
+const Cart = Model.Cart
+
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const config = require('../config/auth.config')
-Model = Model.Customers
 
 exports.login = async (req,res) =>{
     try{
-        let user = await Model.findOne({ where: { email: req.body.email } });
+        let customer = await Customers.findOne({ where: { email: req.body.email } });
 
-        if (!user){
-            return res.status(404).json({ message: "User does not exist!" });
+        if (!customer){
+            return res.status(404).json({ message: "Customer does not exist!" });
         }
 
-        const passwordIsValid = bcrypt.compareSync(req.body.password, user.password)
+        const passwordIsValid = bcrypt.compareSync(req.body.password, customer.password)
 
         if (!passwordIsValid) {
             return res.status(401).json({
@@ -21,10 +24,10 @@ exports.login = async (req,res) =>{
             });
         }
 
-        const token = jwt.sign({ nif: user.id_nif }, config.secret, { expiresIn: 8600 });
+        const token = jwt.sign({ nif: customer.id_nif }, config.secret, { expiresIn: 8600 });
 
         return res.status(200).json({
-            nif:user.id_nif,
+            nif:customer.id_nif,
             accessToken: token
         })
 
@@ -38,10 +41,10 @@ exports.login = async (req,res) =>{
 
 exports.register = async (req,res) =>{
     try {
-        let data = await Model.findOne({where: {id_nif: req.body.nif }})
+        let data = await Customers.findOne({where: {id_nif: req.body.nif }})
 
         if(!data){
-            Model.create({
+            Customers.create({
                 id_nif:req.body.nif,
                 firstname:req.body.firstname,
                 lastname:req.body.lastname,
@@ -50,13 +53,23 @@ exports.register = async (req,res) =>{
                 gender:req.body.gender,
                 birthday:req.body.birthday
             }).then(data=>{
-                res.status(201).json({ message: "New user created."})
+
+                Score.create({
+                    id_nif:req.body.nif,
+                    points:0
+                })
+
+                Cart.create({
+                    id_nif:req.body.nif
+                })
+
+                res.status(201).json({ message: "New customer created."})
             })
         }
         else{
             res.status(500).json({
                 message:
-                    err.message || "User Already Exists."
+                    err.message || "Customer Already Exists."
             })
         }
     }
@@ -69,12 +82,12 @@ exports.register = async (req,res) =>{
 
 exports.getCustomerById = async (req,res) =>{
     try {
-        let data = await Model.findOne({where: {id_nif: req.params.id}})
+        let data = await Customers.findOne({where: {id_nif: req.params.id}})
 
         if (!data){
             res.status(404).json({
                 message:
-                    err.message || `User with nif ${req.params.nif} does not exist!`
+                    err.message || `Customer with nif ${req.params.nif} does not exist!`
             })
         }
         else{

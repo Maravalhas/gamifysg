@@ -67,9 +67,18 @@ sequelize.sync().then().catch(error => {
     console.log(error); 
 })
 
+class Cart extends Model{}
+
+Cart.init({
+    id_nif: {type: DataTypes.INTEGER, primaryKey: true, allowNull: false, unique:true},
+    id_products: {type: DataTypes.STRING,allowNull: true},
+    products_quantity:{type:DataTypes.STRING,allowNull:true}
+},{ sequelize, modelName: 'Cart'})
+
 exports.Score = Score
 exports.Prizes = Prizes
 exports.CustomerPrizes = CustomerPrizes
 exports.Medals = Medals
 exports.CustomerMedals = CustomerMedals
 exports.Customers = Customers
+exports.Cart = Cart

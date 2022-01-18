@@ -82,7 +82,7 @@ exports.getOrderById = async (req,res) =>{
     }
 }
 
-exports.getOrderByUserId = async (req,res) =>{
+exports.getOrderByCustomerId = async (req,res) =>{
     try{
         let data = await axios.get(url+`/?filter[id_customer]=${req.params.id}&`+key)
         data = JSON.parse(convert.xml2json(data.data, {compact: true, ignoreComment: true, spaces: 4}))

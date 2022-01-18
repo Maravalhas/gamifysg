@@ -1,5 +1,4 @@
-const Model = require('../model/model')
-const Score = Model.Score;
+const Score = require('../model/model').Score
 
 exports.getCustomerScore= async (req,res) =>{
     try {
@@ -7,7 +6,7 @@ exports.getCustomerScore= async (req,res) =>{
         if(!data)
         {
             res.status(404).json({
-                message: "User does not exist."
+                message: "Customer does not exist."
             });
         }
         else{
