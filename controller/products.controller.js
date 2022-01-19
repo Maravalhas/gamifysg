@@ -47,16 +47,16 @@ exports.getProductById = async (req,res) =>{
 
         let images = []
 
-        if(data.associations.images.image){
-
+        if(data.associations.images.image && data.associations.images.image.length > 1){
              data.associations.images.image.forEach(obj=>{
                  images.push(obj._attributes["xlink:href"])
              })
-
+        }
+        else if(data.associations.images.image){
+            images.push(data.associations.images.image._attributes["xlink:href"])
         }
         else{
-        
-             images.push("Product Image not Found")
+            images.push("Product Image not Found")
         }
 
         let product = {
