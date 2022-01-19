@@ -26,6 +26,11 @@ exports.getProducts = async (req,res) =>{
 exports.getProductById = async (req,res) =>{
     try {
         let data = await axios.get(url+`/${req.params.id}?`+key)
+
+        if(!data){
+           res.status(404).json({message:"Product does not exist!"});
+        }
+
         data = JSON.parse(convert.xml2json(data.data, {compact: true, ignoreComment: true, spaces: 4}))
         data = data.prestashop.product
 
@@ -41,9 +46,18 @@ exports.getProductById = async (req,res) =>{
         }
 
         let images = []
-        data.associations.images.image.forEach(obj=>{
-            images.push(obj._attributes["xlink:href"])
-        })
+
+        if(data.associations.images.image){
+
+             data.associations.images.image.forEach(obj=>{
+                 images.push(obj._attributes["xlink:href"])
+             })
+
+        }
+        else{
+        
+             images.push("Product Image not Found")
+        }
 
         let product = {
             "id": data.id._cdata,
