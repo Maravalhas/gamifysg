@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx nodemon app.js -w",
-    "start":"node index.js"
+    "start": "node index.js"
   },
   "keywords": [
     "Gamify",
@@ -19,6 +19,7 @@
     "async": "^3.2.2",
     "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
+    "dotenv": "^14.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
