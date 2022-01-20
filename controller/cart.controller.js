@@ -1,5 +1,23 @@
 const Cart = require('../model/model.js').Cart
 
+exports.getCart = async(req,res) =>{
+    try{
+        const data = await Cart.findOne({where:{id_nif:req.params.nif}})
+
+        if(!data){
+            res.status(404).json({
+                message: "Customer does not exist."
+            });
+        }
+
+        res.status(201).json(data)
+
+    }
+    catch(err){
+
+    }
+}
+
 exports.updateCart = async(req,res) =>{
     try{
         const data = await Cart.findOne({where:{id_nif : req.params.nif}})
