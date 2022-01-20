@@ -4,7 +4,8 @@
   "description": "Serviço de Gamificação para Sofia Godinho",
   "main": "index.js",
   "scripts": {
-    "test": "npx nodemon app.js -w"
+    "test": "npx nodemon app.js -w",
+    "start":"node index.js"
   },
   "keywords": [
     "Gamify",
