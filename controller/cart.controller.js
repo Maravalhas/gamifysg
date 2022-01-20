@@ -9,12 +9,12 @@ exports.getCart = async(req,res) =>{
                 message: "Customer does not exist."
             });
         }
-
-        res.status(201).json(data)
-
+        else{
+            res.status(201).json(data)
+        }
     }
     catch(err){
-
+        res.status(500).json({message:err.message});
     }
 }
 
@@ -27,13 +27,14 @@ exports.updateCart = async(req,res) =>{
                 message: "Customer does not exist."
             });
         }
-
-        Cart.update({
-            id_products:req.body.products,
-            products_quantity:req.body.quantity
-        },{where:{id_nif:req.params.nif}}).then(()=>{
-            res.status(200).json({message:"Customer cart updated"})
-        })
+        else{
+            Cart.update({
+                id_products:req.body.products,
+                products_quantity:req.body.quantity
+            },{where:{id_nif:req.params.nif}}).then(()=>{
+                res.status(200).json({message:"Customer cart updated"})
+            })
+        }
     }
     catch(err){
         res.status(500).json({message:err.message});

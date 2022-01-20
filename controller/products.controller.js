@@ -26,23 +26,23 @@ exports.getProducts = async (req,res) =>{
 exports.getProductById = async (req,res) =>{
     try {
         let data = await axios.get(url+`/${req.params.id}?`+key)
-
-        if(!data){
-           res.status(404).json({message:"Product does not exist!"});
-        }
-
         data = JSON.parse(convert.xml2json(data.data, {compact: true, ignoreComment: true, spaces: 4}))
         data = data.prestashop.product
 
-        let stocks = data.associations.stock_availables.stock_available
+        const stocks = data.associations.stock_availables.stock_available
         let finalStock = []
 
-        for(const obj of stocks){
-            let link = obj._attributes["xlink:href"]
-            let req = await axios.get(link+"?"+key)
-            req = JSON.parse(convert.xml2json(req.data, {compact: true, ignoreComment: true, spaces: 4}))
-            let stock = req.prestashop.stock_available.quantity._cdata
-            finalStock.push(stock)
+        try{
+            for(const obj of stocks){
+                const link = obj._attributes["xlink:href"]
+                let req = await axios.get(link+"?"+key)
+                req = JSON.parse(convert.xml2json(req.data, {compact: true, ignoreComment: true, spaces: 4}))
+                let stock = req.prestashop.stock_available.quantity._cdata
+                finalStock.push(stock)
+            }
+        }
+        catch{
+            finalStock = stocks
         }
 
         let images = []
@@ -59,7 +59,7 @@ exports.getProductById = async (req,res) =>{
             images.push("Product Image not Found")
         }
 
-        let product = {
+        res.status(200).json({
             "id": data.id._cdata,
             "name": data.name.language[0]._cdata,
             "category": data.id_category_default._cdata,
@@ -67,8 +67,7 @@ exports.getProductById = async (req,res) =>{
             "price":data.price._cdata,
             "stock":finalStock,  
             "imageLink":images
-        }
-        res.status(200).json(product);
+        })
     }
     catch (err) {
         res.status(500).json({
@@ -80,8 +79,9 @@ exports.getProductById = async (req,res) =>{
 exports.getProductsByCategory = async (req,res) =>{
     try {
 
-        let limit = req.body.limit ? req.body.limit : 10
-        let offset = req.body.offset ? req.body.offset : 0
+        const limit = req.body.limit ? req.body.limit : 10
+        const offset = req.body.offset ? req.body.offset : 0
+        
         let data = await axios.get(url+`/?filter[id_category_default]=${req.params.id}&limit=${offset},${limit}&`+key)
         data = JSON.parse(convert.xml2json(data.data, {compact: true, ignoreComment: true, spaces: 4}))
         data = data.prestashop.products.product
@@ -90,22 +90,22 @@ exports.getProductsByCategory = async (req,res) =>{
 
         try{
             for(const obj of data){
-                let objUrl = obj._attributes["xlink:href"]
+                const objUrl = obj._attributes["xlink:href"]
                 let prod = await axios.get(objUrl+"?"+key)
                 prod = JSON.parse(convert.xml2json(prod.data, {compact: true, ignoreComment: true, spaces: 4}))
                 prod = prod.prestashop.product
 
                 let inStock = false
-                let stocks = prod.associations.stock_availables.stock_available
+                const stocks = prod.associations.stock_availables.stock_available
             
                 try{
                     for(const obj of stocks){
-                        let link = obj._attributes["xlink:href"]
-                        let req = await axios.get(link+"?"+key)
-                        req = JSON.parse(convert.xml2json(req.data, {compact: true, ignoreComment: true, spaces: 4}))
-                        if(req.prestashop.stock_available.quantity._cdata != 0)
-                        inStock=true
-                        break
+                        if(!inStock){
+                            const link = obj._attributes["xlink:href"]
+                            let req = await axios.get(link+"?"+key)
+                            req = JSON.parse(convert.xml2json(req.data, {compact: true, ignoreComment: true, spaces: 4}))
+                            if(req.prestashop.stock_available.quantity._cdata != 0){inStock=true}
+                        }
                     }
                 }
                 catch{
@@ -122,7 +122,7 @@ exports.getProductsByCategory = async (req,res) =>{
                         image = prod.associations.images.image._attributes["xlink:href"]
                     }
                     catch{
-                        image = ""
+                        image = "Product image not found"
                     }
                 }
 
@@ -151,6 +151,7 @@ exports.getProductsByName = async (req,res) =>{
     try {
         let limit = req.body.limit ? req.body.limit : 10
         let offset = req.body.offset ? req.body.offset : 0
+
         let data = await axios.get(url+`/?filter[name]=%[${req.params.text}]%&limit=${offset},${limit}&`+key)
         data = JSON.parse(convert.xml2json(data.data, {compact: true, ignoreComment: true, spaces: 4}))
         data = data.prestashop.products.product
@@ -168,13 +169,13 @@ exports.getProductsByName = async (req,res) =>{
                 let stocks = prod.associations.stock_availables.stock_available
             
                 try{
-                    for(const obj of stocks){
-                        let link = obj._attributes["xlink:href"]
-                        let req = await axios.get(link+"?"+key)
-                        req = JSON.parse(convert.xml2json(req.data, {compact: true, ignoreComment: true, spaces: 4}))
-                        if(req.prestashop.stock_available.quantity._cdata != 0)
-                        inStock=true
-                        break
+                    if(!inStock){
+                        for(const obj of stocks){
+                            let link = obj._attributes["xlink:href"]
+                            let req = await axios.get(link+"?"+key)
+                            req = JSON.parse(convert.xml2json(req.data, {compact: true, ignoreComment: true, spaces: 4}))
+                            if(req.prestashop.stock_available.quantity._cdata != 0){inStock=true}
+                        }
                     }
                 }
                 catch{

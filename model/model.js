@@ -75,6 +75,22 @@ Cart.init({
     products_quantity:{type:DataTypes.STRING,allowNull:true}
 },{ sequelize, modelName: 'Cart'})
 
+class Orders extends Model{}
+
+Orders.init({
+    id_order:{type: DataTypes.INTEGER, primaryKey: true, unique:true, autoIncrement:true},
+    id_nif:{type:DataTypes.INTEGER, allowNull:false},
+    address:{type:DataTypes.STRING, allowNull:false},
+    products:{type:DataTypes.STRING,allowNull:false},
+    payment_method:{type:DataTypes.STRING,allowNull:false},
+    price:{type:DataTypes.FLOAT,allowNull:false},
+    taxrate:{type:DataTypes.FLOAT,allowNull:false},
+    date:{type:DataTypes.DATE, allowNull:false},
+    carrier:{type:DataTypes.STRING,allowNull:false},
+    tracking:{type:DataTypes.STRING,allowNull:true},
+    state:{type:DataTypes.STRING,allowNull:false},
+},{ sequelize, modelName: 'Order'})
+
 exports.Score = Score
 exports.Prizes = Prizes
 exports.CustomerPrizes = CustomerPrizes
@@ -82,3 +98,4 @@ exports.Medals = Medals
 exports.CustomerMedals = CustomerMedals
 exports.Customers = Customers
 exports.Cart = Cart
+exports.Orders = Orders
