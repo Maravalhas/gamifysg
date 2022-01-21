@@ -1,6 +1,7 @@
 const Model = require('../model/model')
 const Medals = Model.Medals;
 const CustomerMedals = Model.CustomerMedals;
+const utility = require('../utilities/validationtool')
 
 exports.getMedal = async (req,res) =>{
     try {
@@ -25,20 +26,28 @@ exports.getMedal = async (req,res) =>{
 
 exports.associateMedal = async (req,res) =>{
     try{
-        let medal = await Medals.findOne({where:{id_medal:req.body.id_medal}})
+        utility.validateToken(req,res)
 
-        if(!medal){
-            res.status(404).json({
-                message: "This medal does not exist."
-            });
+        if(req.loggedUserNif != customer.id_nif){
+            res.status(401).json({message: "You're not authorized to do this request"})
         }
+        else{
+            let medal = await Medals.findOne({where:{id_medal:req.body.id_medal}})
 
-        CustomerMedals.create({
-            id_nif: req.params.nif,
-            id_medal: req.params.id
-        })
-
-        res.status(200).json({message:"Medal associated successfully."});
+            if(!medal){
+                res.status(404).json({
+                    message: "This medal does not exist."
+                });
+            }
+    
+            CustomerMedals.create({
+                id_nif: req.params.nif,
+                id_medal: req.params.id
+            })
+    
+            res.status(200).json({message:"Medal associated successfully."});
+        }
+        
     }
     catch(err){
         res.status(500).json({

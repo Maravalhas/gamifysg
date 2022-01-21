@@ -12,7 +12,7 @@ const validateToken = (req, res) => {
         if (error) {
             return res.status(401).send({ message: "Invalid Token!" })
         }
-        req.loggedUserId = decoded.id
+        req.loggedUserNif = decoded.id_nif
     })
 }
 

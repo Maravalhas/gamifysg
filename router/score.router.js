@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 
 const controller = require('../controller/score.controller')
-const tools = require('../tool/validationtool')
 
 router.route('/:nif')
     .get(controller.getCustomerScore)

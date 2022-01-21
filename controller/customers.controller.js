@@ -24,7 +24,7 @@ exports.login = async (req,res) =>{
             });
         }
 
-        const token = jwt.sign({ nif: customer.id_nif }, config.secret, { expiresIn: 8600 });
+        const token = jwt.sign({ id_nif: customer.id_nif }, config.secret, { expiresIn: 8600 });
 
         return res.status(200).json({
             nif:customer.id_nif,
@@ -80,9 +80,9 @@ exports.register = async (req,res) =>{
     }
 }
 
-exports.getCustomerById = async (req,res) =>{
+exports.getCustomerByNif = async (req,res) =>{
     try {
-        let data = await Customers.findOne({where: {id_nif: req.params.id}})
+        let data = await Customers.findOne({where: {id_nif: req.params.nif}})
 
         if (!data){
             res.status(404).json({

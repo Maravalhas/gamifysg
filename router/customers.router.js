@@ -8,8 +8,8 @@ router.route('/')
 router.route('/signin')
     .post(controller.login)
 
-router.route('/:id')
-    .get(controller.getCustomerById)
+router.route('/:nif')
+    .get(controller.getCustomerByNif)
 
 router.all('*', function (req, res) {
     res.status(404).json({ message: 'Rota não definida.' });
