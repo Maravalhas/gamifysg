@@ -80,6 +80,7 @@ class Orders extends Model{}
 Orders.init({
     id_order:{type: DataTypes.INTEGER, primaryKey: true, unique:true, autoIncrement:true},
     id_nif:{type:DataTypes.INTEGER, allowNull:false},
+    email:{type:DataTypes.STRING,allowNull:false},
     address:{type:DataTypes.STRING, allowNull:false},
     products:{type:DataTypes.STRING,allowNull:false},
     payment_method:{type:DataTypes.STRING,allowNull:false},

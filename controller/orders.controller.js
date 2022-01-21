@@ -5,7 +5,6 @@ const utility = require('../utilities/validationtool')
 
 exports.getOrderById = async (req,res) =>{
     try{
-
         let data = await Orders.findOne({where:{id_order:req.params.id}})
 
         if(!data){
@@ -61,28 +60,20 @@ exports.getOrderByCustomerNif = async (req,res) =>{
 
 exports.registerOrder = async (req,res) =>{
     try{
+        let order = await Orders.create({
+            id_nif: req.body.nif,
+            email:req.body.email,
+            address: req.body.address,
+            products: JSON.stringify(req.body.products),
+            payment_method: req.body.payment_method,
+            price: req.body.price,
+            taxrate: req.body.taxrate,
+            date: Date.now(),
+            carrier: req.body.carrier,
+            state: "Em Processamento"
+        })
 
-        utility.validateToken(req,res)
-
-        if(req.loggedUserNif != req.body.nif){
-            res.status(401).json({message: "You're not authorized to do this request"})
-        }
-        else{
-            
-            let order = await Orders.create({
-                id_nif: req.body.nif,
-                address: req.body.address,
-                products: JSON.stringify(req.body.products),
-                payment_method: req.body.payment_method,
-                price: req.body.price,
-                taxrate: req.body.taxrate,
-                date: Date.now(),
-                carrier: req.body.carrier,
-                state: "Em Processamento"
-            })
-
-            res.status(201).json({message:`Order registered successfully`})
-        }
+        res.status(201).json({message:`Order registered successfully`})
 
     }
     catch(err){
