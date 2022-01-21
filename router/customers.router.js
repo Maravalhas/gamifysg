@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const controller = require('../controller/customers.controller.js')
 
-router.route('/')
+router.route('/signup')
     .post(controller.register)
 
 router.route('/signin')
