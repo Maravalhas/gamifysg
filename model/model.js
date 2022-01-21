@@ -60,7 +60,7 @@ Customers.init({
     email : {type: DataTypes.STRING, allowNull: false, unique:true},
     password : {type: DataTypes.STRING, allowNull: false},
     gender : {type: DataTypes.STRING, allowNull: false}, 
-    birthday : {type: DataTypes.DATE, allowNull: false}
+    birthday : {type: DataTypes.DATE, allowNull: true}
 }, { sequelize, modelName: 'Customer'})
 
 sequelize.sync().then().catch(error => {
