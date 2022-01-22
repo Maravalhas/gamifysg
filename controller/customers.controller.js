@@ -56,12 +56,12 @@ exports.register = async (req,res) =>{
             }).then(data=>{
 
                 Score.create({
-                    id_nif:req.body.nif,
+                    id_nif:data.id_nif,
                     points:0
                 })
 
                 Cart.create({
-                    id_nif:req.body.nif
+                    id_nif:data.id_nif
                 })
 
                 res.status(201).json({ message: "New customer created."})
@@ -69,12 +69,11 @@ exports.register = async (req,res) =>{
         }
         else{
             res.status(500).json({
-                message:
-                    err.message || "Customer Already Exists."
+                message: "Customer Already Exists."
             })
         }
     }
-    catch (err) {
+    catch(err) {
         res.status(500).json({
             message:err.message
         });
@@ -95,7 +94,7 @@ exports.getCustomerByNif = async (req,res) =>{
             res.status(201).json(data)
         }
     }
-    catch (err) {
+    catch(err) {
         res.status(500).json({
             message:err.message
         });
