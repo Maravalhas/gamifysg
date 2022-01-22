@@ -8,9 +8,14 @@ router.route('/signup')
 router.route('/signin')
     .post(controller.login)
 
+
+router.route('/')
+    .get(controller.getCustomerByEmail)
+
 router.route('/:nif')
     .get(controller.getCustomerByNif)
 
+    
 router.all('*', function (req, res) {
     res.status(404).json({ message: 'Rota não definida.' });
 })

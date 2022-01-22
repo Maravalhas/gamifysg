@@ -28,7 +28,8 @@ exports.login = async (req,res) =>{
 
         return res.status(200).json({
             nif:customer.id_nif,
-            accessToken: token
+            accessToken: token,
+            message:"Login sucesss!"
         })
 
     }
@@ -88,6 +89,27 @@ exports.getCustomerByNif = async (req,res) =>{
             res.status(404).json({
                 message:
                     err.message || `Customer with nif ${req.params.nif} does not exist!`
+            })
+        }
+        else{
+            res.status(201).json(data)
+        }
+    }
+    catch (err) {
+        res.status(500).json({
+            message:err.message
+        });
+    }
+}
+
+exports.getCustomerByEmail = async (req,res) =>{
+    try {
+        let data = await Customers.findOne({where: { email : req.query.email}})
+
+        if (!data){
+            res.status(404).json({
+                message:
+                    err.message || `Customer with nif ${req.params.email} does not exist!`
             })
         }
         else{
