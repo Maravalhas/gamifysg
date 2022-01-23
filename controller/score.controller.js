@@ -10,7 +10,7 @@ exports.getCustomerScore= async (req,res) =>{
             });
         }
         else{
-                res.status(200).json(data.points);
+                res.status(200).json(data);
         }
     }
     catch (err) {
@@ -31,7 +31,7 @@ exports.updateCustomerScore = async (req,res) =>{
         }
         else{
             Score.update({points: data.points + req.body.points},{where:{id_nif:req.params.nif}})
-            .then(res.status(201).json({ message: "Customer score updated", location: "/score/" + req.params.id }))
+            .then(res.status(201).json({ data, message: "Customer score updated", location: "/score/" + req.params.nif }))
         }
     }
     catch (err) {
