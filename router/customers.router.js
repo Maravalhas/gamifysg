@@ -14,6 +14,7 @@ router.route('/')
 
 router.route('/:nif')
     .get(controller.getCustomerByNif)
+    .put(controller.updateCustomer)
 
     
 router.all('*', function (req, res) {

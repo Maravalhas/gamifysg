@@ -56,3 +56,36 @@ exports.updateFavourites = async(req,res) =>{
         res.status(500).json({message:err.message});
     }
 }
+
+
+
+exports.createFavourite = async (req, res) => {
+    try {
+        let data = await Favourites.findOne({ where: { id_nif: req.body.nif } })
+
+        if (!data) {
+            Favourites.create({
+                id_nif: req.body.nif,
+                id_products: req.body.id_products,
+                name : req.body.name,
+                category: req.body.category,
+                price: req.body.price,
+                img: req.body.img
+            }).then(data => {
+
+                
+                res.status(201).json({ message: "New favourite created." })
+            })
+        }
+        else {
+            res.status(500).json({
+                message: "Favourite Already Exists."
+            })
+        }
+    }
+    catch (err) {
+        res.status(500).json({
+            message: err.message
+        });
+    }
+}
