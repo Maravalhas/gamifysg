@@ -2,6 +2,7 @@ const Model = require('../model/model.js')
 const Customers = Model.Customers
 const Score = Model.Score
 const Cart = Model.Cart
+const Favourites = Model.Favourites
 
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -61,6 +62,10 @@ exports.register = async (req,res) =>{
                 })
 
                 Cart.create({
+                    id_nif:data.id_nif
+                })
+
+                Favourites.create({
                     id_nif:data.id_nif
                 })
 
