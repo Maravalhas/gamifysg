@@ -2,6 +2,8 @@ const Model = require('../model/model')
 const Orders = Model.Orders
 const Customers = Model.Customers
 const utility = require('../utilities/validationtool')
+var jwt = require('jsonwebtoken');
+const config = require('../config/auth.config');
 
 exports.getOrderById = async (req,res) =>{
     try{
@@ -29,11 +31,6 @@ exports.getOrderByCustomerNif = async (req,res) =>{
 
         utility.validateToken(req,res)
 
-        if(req.loggedUserNif != customer.id_nif){
-            res.status(401).json({message: "You're not authorized to do this request"})
-        }
-        else{
-
             if(!customer){
                 res.status(404).json({message:"Customer does not exist."});
             }
@@ -47,7 +44,7 @@ exports.getOrderByCustomerNif = async (req,res) =>{
                     res.status(200).json(data);
                 }
             }
-        }
+        
 
         
     }

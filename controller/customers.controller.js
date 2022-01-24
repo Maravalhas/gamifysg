@@ -31,6 +31,7 @@ exports.login = async (req,res) =>{
             nif:customer.id_nif,
             accessToken: token,
             message:"Login sucesss!"
+
         })
 
     }
@@ -40,6 +41,9 @@ exports.login = async (req,res) =>{
         });
     }
 }
+
+
+
 
 exports.register = async (req,res) =>{
     try {
@@ -113,7 +117,7 @@ exports.getCustomerByEmail = async (req,res) =>{
         if (!data){
             res.status(404).json({
                 message:
-                    err.message || `Customer with nif ${req.params.email} does not exist!`
+                    err.message || `Customer with email ${req.params.email} does not exist!`
             })
         }
         else{
