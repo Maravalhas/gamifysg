@@ -66,9 +66,7 @@ exports.createFavourite = async (req, res) => {
         if (!data) {
             Favourites.create({
                 id_nif: req.body.nif,
-                id_products: req.body.id_products,
                 name : req.body.name,
-                category: req.body.category,
                 price: req.body.price,
                 img: req.body.img
             }).then(data => {

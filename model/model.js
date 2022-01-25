@@ -95,10 +95,8 @@ Orders.init({
 class Favourites extends Model{}
 
 Favourites.init({
-    id_nif:{type: DataTypes.INTEGER, primaryKey: true, allowNull: false, unique:true},
-    id_products: {type: DataTypes.STRING, allowNull: true},
+    id_nif:{type: DataTypes.INTEGER, primaryKey: true, allowNull: false, unique:false},
     name : {type:DataTypes.STRING,allowNull:false},
-    category: {type:DataTypes.STRING,allowNull:false},
     price: {type:DataTypes.FLOAT,allowNull:false},
     img: {type:DataTypes.STRING,allowNull:false},
 },{ sequelize, modelName: 'Favourite'})
