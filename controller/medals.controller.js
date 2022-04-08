@@ -1,57 +1,48 @@
-const Model = require('../model/model')
-const Medals = Model.Medals;
-const CustomerMedals = Model.CustomerMedals;
-const utility = require('../utilities/validationtool')
+const db = require("../models/index.js");
+const Medals = db.medals;
+const CustomerMedals = db.customermedals;
 
-exports.getMedal = async (req,res) =>{
-    try {
-        let medal = await Medals.findOne({where:{id_medal:req.params.id}})
+exports.getMedal = async (req, res) => {
+  try {
+    let medal = await Medals.findOne({ where: { id_medal: req.params.id } });
 
-        if(!medal)
-        {
-            res.status(404).json({
-                message: "This medal does not exist."
-            });
-        }
-        
-        res.status(200).json(medal);
-        
+    if (!medal) {
+      return res.status(404).json({
+        message: "This medal does not exist.",
+      });
     }
-    catch (err) {
-        res.status(500).json({
-            message:err.message
-        });
-    }
-}
 
-exports.associateMedal = async (req,res) =>{
-    try{
-        utility.validateToken(req,res)
+    return res.status(200).json(medal);
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+};
 
-        if(req.loggedUserNif != customer.id_nif){
-            res.status(401).json({message: "You're not authorized to do this request"})
-        }
-        else{
-            let medal = await Medals.findOne({where:{id_medal:req.body.id_medal}})
+exports.associateMedal = async (req, res) => {
+  try {
+    let medal = await Medals.findOne({
+      where: { id_medal: req.body.id_medal },
+    });
 
-            if(!medal){
-                res.status(404).json({
-                    message: "This medal does not exist."
-                });
-            }
-    
-            CustomerMedals.create({
-                id_nif: req.params.nif,
-                id_medal: req.params.id
-            })
-    
-            res.status(200).json({message:"Medal associated successfully."});
-        }
-        
+    if (!medal) {
+      return res.status(404).json({
+        message: "This medal does not exist.",
+      });
     }
-    catch(err){
-        res.status(500).json({
-            message:err.message
-        });
-    }
-}
+
+    await CustomerMedals.create({
+      id_nif: req.params.nif,
+      id_medal: req.params.id,
+    }).then((data) => {
+      return res
+        .status(200)
+        .json({ message: "Medal associated successfully." });
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};

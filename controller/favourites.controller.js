@@ -1,89 +1,68 @@
-const Favourites = require('../model/model.js').Favourites
+const db = require("../models/index.js");
+const Favourites = db.favourites;
 
-exports.getFavourites = async(req,res) =>{
-    try{
-        utility.validateToken(req,res)
+exports.getFavourites = async (req, res) => {
+  try {
+    const data = await Favourites.findOne({
+      where: { id_nif: req.params.nif },
+    });
 
-        if(req.loggedUserNif != req.params.nif){
-            res.status(401).json({message: "You're not authorized to do this request"})
-        }
-        else{
-            const data = await Favourites.findOne({where:{id_nif:req.params.nif}})
-
-            if(!data){
-                res.status(404).json({
-                    message: "Customer does not exist."
-                });
-            }
-            else{
-                res.status(201).json(data)
-            }
-        }
+    if (!data) {
+      return res.status(404).json({
+        message: "Customer does not exist.",
+      });
     }
-    catch(err){
-        res.status(500).json({message:err.message});
+    return res.status(201).json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.updateFavourites = async (req, res) => {
+  try {
+    const data = await Favourites.findOne({
+      where: { id_nif: req.params.nif },
+    });
+
+    if (!data) {
+      return res.status(404).json({
+        message: "Customer does not exist.",
+      });
     }
-}
 
-exports.updateFavourites = async(req,res) =>{
-    try{
-        utility.validateToken(req,res)
-
-        if(req.loggedUserNif != req.params.nif){
-            res.status(401).json({message: "You're not authorized to do this request"})
-        }
-
-        else{
-
-            const data = await Favourites.findOne({where:{id_nif : req.params.nif}})
-
-            if(!data){
-                res.status(404).json({
-                    message: "Customer does not exist."
-                });
-            }
-            else{
-                Favourites.update({
-                    id_products:req.body.products
-                },{where:{id_nif:req.params.nif}}).then(()=>{
-                    res.status(200).json({message:"Customer favourites updated"})
-                })
-            }
-        }
-
-    }
-    catch(err){
-        res.status(500).json({message:err.message});
-    }
-}
-
-
+    await Favourites.update(
+      {
+        id_products: req.body.products,
+      },
+      { where: { id_nif: req.params.nif } }
+    ).then(() => {
+      return res.status(200).json({ message: "Customer favourites updated" });
+    });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
 
 exports.createFavourite = async (req, res) => {
-    try {
-        let data = await Favourites.findOne({ where: { id_nif: req.body.nif } })
+  try {
+    let data = await Favourites.findOne({ where: { id_nif: req.body.nif } });
 
-        if (!data) {
-            Favourites.create({
-                id_nif: req.body.nif,
-                name : req.body.name,
-                price: req.body.price,
-                img: req.body.img
-            }).then(data => {
-
-                
-                res.status(201).json({ message: "New favourite created." })
-            })
-        }
-        else {
-            res.status(500).json({
-                message: "Favourite Already Exists."
-            })
-        }
+    if (data) {
+      return res.status(500).json({
+        message: "Favourite Already Exists.",
+      });
     }
-    catch (err) {
-        res.status(500).json({
-            message: err.message
-        });
-    }
-}
+    await Favourites.create({
+      id_nif: req.body.nif,
+      name: req.body.name,
+      price: req.body.price,
+      img: req.body.img,
+    }).then((data) => {
+      return res.status(201).json({ message: "New favourite created." });
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+};
