@@ -2,7 +2,7 @@ const db = require("../models/index.js");
 const Customers = db.customers;
 
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 
 const secret = process.env.SECRET;
 
