@@ -106,7 +106,7 @@ exports.getProductById = async (req, res) => {
 
 exports.getProductsByCategory = async (req, res) => {
   try {
-    const limit = req.body.limit ? req.body.limit : 10;
+    const limit = req.body.limit ? req.body.limit : 4;
     const offset = req.body.offset ? req.body.offset : 0;
 
     let data = await axios.get(
@@ -203,7 +203,7 @@ exports.getProductsByCategory = async (req, res) => {
 
 exports.getProductsByName = async (req, res) => {
   try {
-    let limit = req.body.limit ? req.body.limit : 10;
+    let limit = req.body.limit ? req.body.limit : 4;
     let offset = req.body.offset ? req.body.offset : 0;
 
     let data = await axios.get(
